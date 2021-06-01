@@ -2,7 +2,6 @@
 
 const BaseManager = require('./BaseManager');
 const Role = require('../structures/Role');
-const Collection = require('../util/Collection');
 const Permissions = require('../util/Permissions');
 const { resolveColor } = require('../util/Util');
 
@@ -31,11 +30,11 @@ class RoleManager extends BaseManager {
   }
 
   /**
-   * Obtains a role from Discord, or the role cache if they're already available.
-   * @param {Snowflake} [id] ID of the role
-   * @param {boolean} [cache=true] Whether to cache the new role object(s) if they weren't already
+   * Obtains one or more roles from Discord, or the role cache if they're already available.
+   * @param {Snowflake} [id] ID or IDs of the role(s)
+   * @param {boolean} [cache=true] Whether to cache the new roles objects if it weren't already
    * @param {boolean} [force=false] Whether to skip the cache check and request the API
-   * @returns {Promise<?Role|Collection<Snowflake, Role>>}
+   * @returns {Promise<Role|RoleManager>}
    * @example
    * // Fetch all roles from the guild
    * message.guild.roles.fetch()
@@ -54,10 +53,9 @@ class RoleManager extends BaseManager {
     }
 
     // We cannot fetch a single role, as of this commit's date, Discord API throws with 405
-    const data = await this.client.api.guilds(this.guild.id).roles.get();
-    const roles = new Collection();
-    for (const role of data) roles.set(role.id, this.add(role, cache));
-    return id ? roles.get(id) ?? null : roles;
+    const roles = await this.client.api.guilds(this.guild.id).roles.get();
+    for (const role of roles) this.add(role, cache);
+    return id ? this.cache.get(id) || null : this;
   }
 
   /**
@@ -89,12 +87,7 @@ class RoleManager extends BaseManager {
    * Creates a new role in the guild with given information.
    * <warn>The position will silently reset to 1 if an invalid one is provided, or none.</warn>
    * @param {Object} [options] Options
-   * @param {string} [options.name] The name of the new role
-   * @param {ColorResolvable} [options.color] The data to create the role with
-   * @param {boolean} [options.hoist] Whether or not the new role should be hoisted.
-   * @param {PermissionResolvable} [options.permissions] The permissions for the new role
-   * @param {number} [options.position] The position of the new role
-   * @param {boolean} [options.mentionable] Whether or not the new role should be mentionable.
+   * @param {RoleData} [options.data] The data to create the role with
    * @param {string} [options.reason] Reason for creating this role
    * @returns {Promise<Role>}
    * @example
@@ -105,50 +98,30 @@ class RoleManager extends BaseManager {
    * @example
    * // Create a new role with data and a reason
    * guild.roles.create({
-   *   name: 'Super Cool Blue People',
-   *   color: 'BLUE',
+   *   data: {
+   *     name: 'Super Cool People',
+   *     color: 'BLUE',
+   *   },
    *   reason: 'we needed a role for Super Cool People',
    * })
    *   .then(console.log)
    *   .catch(console.error);
    */
-  create(options = {}) {
-    let { name, color, hoist, permissions, position, mentionable, reason } = options;
-    if (color) color = resolveColor(color);
-    if (permissions) permissions = Permissions.resolve(permissions).toString();
+  create({ data = {}, reason } = {}) {
+    if (data.color) data.color = resolveColor(data.color);
+    if (data.permissions) data.permissions = Permissions.resolve(data.permissions);
 
-    return this.client.api
+    return this.guild.client.api
       .guilds(this.guild.id)
-      .roles.post({
-        data: {
-          name,
-          color,
-          hoist,
-          permissions,
-          mentionable,
-        },
-        reason,
-      })
+      .roles.post({ data, reason })
       .then(r => {
         const { role } = this.client.actions.GuildRoleCreate.handle({
           guild_id: this.guild.id,
           role: r,
         });
-        if (position) return role.setPosition(position, reason);
+        if (data.position) return role.setPosition(data.position, reason);
         return role;
       });
-  }
-
-  /**
-   * Gets the managed role a user created when joining the guild, if any
-   * <info>Only ever available for bots</info>
-   * @param {UserResolvable} user The user to access the bot role for
-   * @returns {?Role}
-   */
-  botRoleFor(user) {
-    const userID = this.client.users.resolveID(user);
-    if (!userID) return null;
-    return this.cache.find(role => role.tags?.botID === userID) ?? null;
   }
 
   /**
@@ -158,15 +131,6 @@ class RoleManager extends BaseManager {
    */
   get everyone() {
     return this.cache.get(this.guild.id);
-  }
-
-  /**
-   * The premium subscriber role of the guild, if any
-   * @type {?Role}
-   * @readonly
-   */
-  get premiumSubscriberRole() {
-    return this.cache.find(role => role.tags?.premiumSubscriberRole) ?? null;
   }
 
   /**

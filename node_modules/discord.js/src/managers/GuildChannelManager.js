@@ -86,7 +86,7 @@ class GuildChannelManager extends BaseManager {
    *   permissionOverwrites: [
    *      {
    *        id: message.author.id,
-   *        deny: [Permissions.FLAGS.VIEW_CHANNEL],
+   *        deny: ['VIEW_CHANNEL'],
    *     },
    *   ],
    * })

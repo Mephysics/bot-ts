@@ -1,3 +1,5 @@
-export let token: string  = "TOKEN";
-export let prefix: string = "PREFIX";
+import 'dotenv/config'
+
+export let token: string  = process.env.CLIENT_TOKEN;
+export let prefix: string = process.env.PREFIX;
 export let owners: string[] = [];

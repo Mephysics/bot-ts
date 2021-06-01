@@ -63,7 +63,7 @@ class Role extends Base {
      * The permissions of the role
      * @type {Readonly<Permissions>}
      */
-    this.permissions = new Permissions(BigInt(data.permissions)).freeze();
+    this.permissions = new Permissions(data.permissions).freeze();
 
     /**
      * Whether or not the role is managed by an external service
@@ -82,26 +82,6 @@ class Role extends Base {
      * @type {boolean}
      */
     this.deleted = false;
-
-    /**
-     * The tags this role has
-     * @type {?Object}
-     * @property {Snowflake} [botID] The id of the bot this role belongs to
-     * @property {Snowflake} [integrationID] The id of the integration this role belongs to
-     * @property {true} [premiumSubscriberRole] Whether this is the guild's premium subscription role
-     */
-    this.tags = data.tags ? {} : null;
-    if (data.tags) {
-      if ('bot_id' in data.tags) {
-        this.tags.botID = data.tags.bot_id;
-      }
-      if ('integration_id' in data.tags) {
-        this.tags.integrationID = data.tags.integration_id;
-      }
-      if ('premium_subscriber' in data.tags) {
-        this.tags.premiumSubscriberRole = true;
-      }
-    }
   }
 
   /**
@@ -147,7 +127,7 @@ class Role extends Base {
    */
   get editable() {
     if (this.managed) return false;
-    const clientMember = this.guild.members.resolve(this.client.user);
+    const clientMember = this.guild.member(this.client.user);
     if (!clientMember.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) return false;
     return clientMember.roles.highest.comparePositionTo(this) > 0;
   }
@@ -197,6 +177,8 @@ class Role extends Base {
    *   .catch(console.error);
    */
   async edit(data, reason) {
+    if (typeof data.permissions !== 'undefined') data.permissions = Permissions.resolve(data.permissions);
+    else data.permissions = this.permissions.bitfield;
     if (typeof data.position !== 'undefined') {
       await Util.setPosition(
         this,
@@ -218,7 +200,7 @@ class Role extends Base {
           name: data.name || this.name,
           color: data.color !== null ? Util.resolveColor(data.color || this.color) : null,
           hoist: typeof data.hoist !== 'undefined' ? data.hoist : this.hoist,
-          permissions: typeof data.permissions !== 'undefined' ? new Permissions(data.permissions) : this.permissions,
+          permissions: data.permissions,
           mentionable: typeof data.mentionable !== 'undefined' ? data.mentionable : this.mentionable,
         },
         reason,
@@ -294,12 +276,12 @@ class Role extends Base {
    * @returns {Promise<Role>}
    * @example
    * // Set the permissions of the role
-   * role.setPermissions([Permissions.FLAGS.KICK_MEMBERS, Permissions.FLAGS.BAN_MEMBERS])
+   * role.setPermissions(['KICK_MEMBERS', 'BAN_MEMBERS'])
    *   .then(updated => console.log(`Updated permissions to ${updated.permissions.bitfield}`))
    *   .catch(console.error);
    * @example
    * // Remove all permissions from a role
-   * role.setPermissions(0n)
+   * role.setPermissions(0)
    *   .then(updated => console.log(`Updated permissions to ${updated.permissions.bitfield}`))
    *   .catch(console.error);
    */

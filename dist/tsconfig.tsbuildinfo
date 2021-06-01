@@ -217,8 +217,8 @@
         "affectsGlobalScope": true
       },
       "../src/config.ts": {
-        "version": "c12de1f6de5f8b5298de29df95ccd0a578ba8690c76aecaa5421c52cdbc292b0",
-        "signature": "aefd43a3705c2627e512bdfea0f3e5b3d76b82d3681505c89a5edb4f03885046",
+        "version": "556d56ced69fb8ff883762dd08f3edb3906d79446c98e25dc7a9d80d14c76fb6",
+        "signature": "7aca11b3eb7ce9b5321e39f3035f7164e5f6cdd6d61edc2f24f75ac2024fcb62",
         "affectsGlobalScope": false
       },
       "../node_modules/@discordjs/collection/dist/index.d.ts": {
@@ -227,22 +227,22 @@
         "affectsGlobalScope": false
       },
       "../node_modules/discord.js/typings/index.d.ts": {
-        "version": "6fcd1b2bbfa053488de4ebea477b32bf39e358f29e92cdf1579a45d2dc861c9e",
-        "signature": "6fcd1b2bbfa053488de4ebea477b32bf39e358f29e92cdf1579a45d2dc861c9e",
+        "version": "bbb87411988e93370461ac33c6437098c8cd39e9a7c92ea0d94b6a375dbe52cc",
+        "signature": "bbb87411988e93370461ac33c6437098c8cd39e9a7c92ea0d94b6a375dbe52cc",
         "affectsGlobalScope": true
       },
       "../node_modules/discord-akairo/src/index.d.ts": {
-        "version": "cb2a7eac053556da539ac76159bbafbeb72b5a7c61a5f3d510ba16ffe27e0333",
-        "signature": "cb2a7eac053556da539ac76159bbafbeb72b5a7c61a5f3d510ba16ffe27e0333",
+        "version": "1cf29400108238b89ae9016b02e409ff1dcd70ccd57c8108664c930c0aca38ea",
+        "signature": "1cf29400108238b89ae9016b02e409ff1dcd70ccd57c8108664c930c0aca38ea",
         "affectsGlobalScope": false
       },
-      "../src/client/botclient.ts": {
-        "version": "dad3189331e927496a302060987982c3341b5f28f414c92f087f923df0380845",
+      "../src/client/client.ts": {
+        "version": "f4e1cadddc9d4c56ba30a8c801cd4a44f24eff8207934a2c27855b7db63761be",
         "signature": "16219ff27f84b3677e7882f46011c848d9f4fbaee42085ee60031a1b5251b9db",
         "affectsGlobalScope": false
       },
-      "../src/bot.ts": {
-        "version": "7cf5af9680f3eef55ead65ccf48795c7880562febc08d6d6e5bde36142e76f4f",
+      "../src/app.ts": {
+        "version": "851947529ad5cf35797e7cbe3d0677c1d5143df23a9bbcb3cd98b13947458196",
         "signature": "f761c91419d0a89422a0004ef1a92929dd4d2d5e5c16758654d8b0467d1998c6",
         "affectsGlobalScope": false
       },
@@ -749,11 +749,11 @@
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/stream.d.ts"
       ],
-      "../src/bot.ts": [
-        "../src/client/botclient.ts",
+      "../src/app.ts": [
+        "../src/client/client.ts",
         "../src/config.ts"
       ],
-      "../src/client/botclient.ts": [
+      "../src/client/client.ts": [
         "../node_modules/@types/node/dns.d.ts",
         "../node_modules/@types/node/path.d.ts",
         "../node_modules/discord-akairo/src/index.d.ts",
@@ -1009,7 +1009,7 @@
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/stream.d.ts"
       ],
-      "../src/client/botclient.ts": [
+      "../src/client/client.ts": [
         "../node_modules/discord-akairo/src/index.d.ts"
       ],
       "../src/commands/public commands/pingcommand.ts": [
@@ -1113,8 +1113,8 @@
       "../node_modules/@types/node/zlib.d.ts",
       "../node_modules/discord-akairo/src/index.d.ts",
       "../node_modules/discord.js/typings/index.d.ts",
-      "../src/bot.ts",
-      "../src/client/botclient.ts",
+      "../src/app.ts",
+      "../src/client/client.ts",
       "../src/commands/public commands/pingcommand.ts",
       "../src/config.ts",
       "../src/listeners/client/readylisteners.ts"

@@ -231,19 +231,18 @@ class MessageEmbed {
   }
 
   /**
-   * The accumulated length for the embed title, description, fields, footer text, and author name
+   * The accumulated length for the embed title, description, fields and footer text
    * @type {number}
    * @readonly
    */
   get length() {
     return (
-      (this.title?.length ?? 0) +
-      (this.description?.length ?? 0) +
+      (this.title ? this.title.length : 0) +
+      (this.description ? this.description.length : 0) +
       (this.fields.length >= 1
         ? this.fields.reduce((prev, curr) => prev + curr.name.length + curr.value.length, 0)
         : 0) +
-      (this.footer?.text.length ?? 0) +
-      (this.author?.name.length ?? 0)
+      (this.footer ? this.footer.text.length : 0)
     );
   }
 

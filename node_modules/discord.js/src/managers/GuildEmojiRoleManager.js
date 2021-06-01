@@ -114,10 +114,6 @@ class GuildEmojiRoleManager {
   _patch(roles) {
     this.emoji._roles = roles;
   }
-
-  valueOf() {
-    return this.cache;
-  }
 }
 
 module.exports = GuildEmojiRoleManager;

@@ -28,7 +28,6 @@ export const {
   UserFlags,
   Util,
   version,
-  BaseGuildEmojiManager,
   ChannelManager,
   GuildChannelManager,
   GuildEmojiManager,

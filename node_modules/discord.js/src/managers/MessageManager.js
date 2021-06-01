@@ -116,13 +116,14 @@ class MessageManager extends BaseManager {
   /**
    * Deletes a message, even if it's not cached.
    * @param {MessageResolvable} message The message to delete
+   * @param {string} [reason] Reason for deleting this message, if it does not belong to the client user
    * @returns {Promise<void>}
    */
-  async delete(message) {
+  async delete(message, reason) {
     message = this.resolveID(message);
     if (!message) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable');
 
-    await this.client.api.channels(this.channel.id).messages(message).delete();
+    await this.client.api.channels(this.channel.id).messages(message).delete({ reason });
   }
 
   async _fetchId(messageID, cache, force) {
